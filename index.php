@@ -102,7 +102,7 @@
             <button type="submit" class="w-100 mb-3 form-submit btn btn-primary">Envoyer</button>
 
         </form>
-        <p><br><em>Ce site à recourt à l'utilisation de cookies utile à ce que vous n'ayez pas à retaper sans cesse vos informations !</em></p>
+        <p><br><em>Ce site à recourt à l'utilisation de cookies utiles à ce que vous n'ayez pas à retaper sans cesse vos informations !</em></p>
     </div>
 </body>
 
