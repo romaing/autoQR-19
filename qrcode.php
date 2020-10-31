@@ -67,7 +67,7 @@ if(isset($_POST['nonce_form'])) {
  * @return void
  */
 function createQRCode(array $fields) {
-    
+
     extract($fields);
     // Get current date
     $currentDate = date('d/m/Y');
@@ -84,6 +84,8 @@ function createQRCode(array $fields) {
     QRcode::png($qrText, 'qrcode.png'); // creates file
     $mpdf = new \Mpdf\Mpdf();
     $mpdf->WriteHTML('<h1>Hello world!</h1>');
+    $mpdf->SetTitle('Mon attestation');
     $mpdf->Image('qrcode.png', 0, 0, 100, 100, 'png', '', true, false);
     $mpdf->Output();
 }
+
