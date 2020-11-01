@@ -73,6 +73,8 @@ function createQRCode(array $fields) {
     $currentDate = date('d/m/Y');
     $currentTime = date('G\hi');
 
+    $file = 'qrcode'.date('-ymd-hi').'.png';
+
     $qrText = "Cree le: $currentDate a $currentTime;
     Nom: $lname;
     Prenom: $fname;
@@ -81,11 +83,11 @@ function createQRCode(array $fields) {
     Sortie: $currentDate a $currentTime;
     Motifs: $type_sortie";
 
-    QRcode::png($qrText, 'qrcode.png'); // creates file
+    QRcode::png($qrText, $file); // creates file
     $mpdf = new \Mpdf\Mpdf();
-    $mpdf->WriteHTML('<h1>Hello world!</h1>');
+    $mpdf->WriteHTML('<h1>Mon attestation</h1>');
     $mpdf->SetTitle('Mon attestation');
-    $mpdf->Image('qrcode.png', 0, 0, 100, 100, 'png', '', true, false);
+    $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
     $mpdf->Output();
 }
 
