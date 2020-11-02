@@ -58,11 +58,9 @@ if(isset($_POST['nonce_form'])) {
     header('Location: index.php');
     exit();
 }
-function createPage(array $fields, $file ) {
+function createPage(array $fields, $currentDate, $currentTime, $decalage ,$file ) {
     extract($fields);
 
-    $currentDate = date('d/m/Y');
-    $currentTime = date('G\hi');
 
     $inputsSortie = [
         'travail' => 'Déplacements entre le domicile et le lieu d’exercice de l’activité professionnelle ou un établissement d’enseignement ou de formation, déplacements professionnels ne pouvant être différés, déplacements pour un concours ou un examen;',
@@ -114,7 +112,7 @@ function createPage(array $fields, $file ) {
     <div style='font-size:11px;'>
         <p><sup>1</sup> Les personnes souhaitant bénéficier de l'une de ces exceptions doivent se munir s'il y a lieu, lors de leurs déplacements hors de leur domicile, d'un document leur permettant de justifier que le déplacement considéré entre dans le champ de l'une de ces exceptions. </p>
         <p><sup>2</sup> A utiliser par les travailleurs non-salariés, lorsqu'ils ne peuvent disposer d'un justificatif de déplacement établi par leur employeur. </p>
-        <p><sup>3</sup> Y compris les acquisitions à titre gratuit (distribution de denrées alimentaires...) et les déplacements liés à la perception de prestations sociales et au retrait d'espèces. toto toto01/01/1965paris999 av de foch 75001 paris</p>
+        <p><sup>3</sup> Y compris les acquisitions à titre gratuit (distribution de denrées alimentaires...) et les déplacements liés à la perception de prestations sociales et au retrait d'espèces. </p>
     </div>
     </div>
     
@@ -135,8 +133,9 @@ function createQRCode(array $fields) {
 
     extract($fields);
     // Get current date
+    $decalage = time() - (30 * 60);
     $currentDate = date('d/m/Y');
-    $currentTime = date('G\hi');
+    $currentTime = date('G\hi', $decalage );
 
     $file = 'qrcode'.date('-ymd-hi').'.png';
 
@@ -150,7 +149,7 @@ function createQRCode(array $fields) {
 
     QRcode::png($qrText, $file); // creates file
     $mpdf = new \Mpdf\Mpdf();
-    $mpdf->WriteHTML( createPage( $fields, $file  ) , \Mpdf\HTMLParserMode::HTML_BODY);
+    $mpdf->WriteHTML( createPage( $fields, $currentDate, $currentTime, $decalage ,$file  ) , \Mpdf\HTMLParserMode::HTML_BODY);
     $mpdf->SetTitle('Mon attestation');
     $mpdf->AddPage();
     $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
