@@ -33,11 +33,9 @@ if(isset($_POST['nonce_form'])) {
     $fields['postal_code'] = htmlspecialchars(stripslashes(trim($_POST['postal_code'])));
     setcookie('postal_code', $fields['postal_code'], time() + 365*24*3600, null, null, false, true); 
 
-    $type_sortie = is_array($_POST['type_sortie']) ? implode(', ',$_POST['type_sortie']) : $_POST['type_sortie'];
-    $fields['type_sortie'] = htmlspecialchars(stripslashes(trim($type_sortie)));
-    setcookie('type_sortie', $fields['type_sortie'], time() + 365*24*3600, null, null, false, true); 
-
-
+    $type_sortie = $_POST['type_sortie'];
+    $fields['type_sortie'] = $type_sortie;
+    setcookie('type_sortie', implode(', ', $fields['type_sortie']), time() + 365*24*3600, null, null, false, true); 
 
     createQRCode($fields);
     
@@ -58,7 +56,8 @@ if(isset($_POST['nonce_form'])) {
     header('Location: index.php');
     exit();
 }
-function createPage(array $fields, $currentDate, $currentTime, $decalage ,$file ) {
+
+function createPage(array $fields, $currentDate, $currentTime ,$file ) {
     extract($fields);
 
 
@@ -90,6 +89,7 @@ function createPage(array $fields, $currentDate, $currentTime, $decalage ,$file 
     ";
 
     $type_sortie = explode(', ', $type_sortie);
+
     foreach ($inputsSortie as $key => $input) : 
         $check = ! in_array($key, $type_sortie  ) ? "□": "☒";
         $page .= "
@@ -117,6 +117,7 @@ function createPage(array $fields, $currentDate, $currentTime, $decalage ,$file 
     </div>
     </div>
     
+
 
     ";
 
@@ -150,7 +151,9 @@ function createQRCode(array $fields) {
 
     QRcode::png($qrText, $file); // creates file
     $mpdf = new \Mpdf\Mpdf();
-    $mpdf->WriteHTML( createPage( $fields, $currentDate, $currentTime, $decalage ,$file  ) , \Mpdf\HTMLParserMode::HTML_BODY);
+
+    $mpdf->WriteHTML( createPage( $fields, $currentDate, $currentTime ,$file  ) , \Mpdf\HTMLParserMode::HTML_BODY);
+
     $mpdf->SetTitle('Mon attestation');
     $mpdf->AddPage();
     $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
