@@ -58,7 +58,7 @@ if(isset($_POST['nonce_form'])) {
     header('Location: index.php');
     exit();
 }
-function createPage(array $fields) {
+function createPage(array $fields, $file ) {
     extract($fields);
 
     $currentDate = date('d/m/Y');
@@ -79,40 +79,45 @@ function createPage(array $fields) {
     $page = "
     <h2 style='text-align:center;'>ATTESTATION DE DÉPLACEMENT DÉROGATOIRE </h2>
     
-    <p style='text-align:center;'>
-    En application du décret n°2020-1310 du 29 octobre 2020 prescrivant les mesures générales nécessaires pour faire face à l'épidémie de Covid19 dans le cadre de l'état d'urgence sanitaire 
+    <p style='text-align:center;font-family:arial;'>
+    En application du décret n°2020-1310 du 29 octobre 2020 prescrivant les mesures générales nécessaires pour faire face à l'épidémie de Covid19 dans le cadre de l'état d'urgence sanitaire. 
     </p>
-    
+    <div style='font-family:arial;'>
     <p>Je soussigné(e), </p>
     <p>Mme/M. : $lname $fname</p>
     <p>Né(e) le : $birthday_date &nbsp; &nbsp; &nbsp; &nbsp; à : $birthday_place</p>
     <p>Demeurant : $address $postal_code $city </p>
     <p>certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé par le décretn°2020-1310 du 29 octobre 2020 prescrivant les mesures générales nécessaires pour faire face àl'épidémie de Covid19 dans le cadre de l'état d'urgence sanitaire <sup>1</sup> :</p>
-    <table>
+    <table style='font-family:arial;'>
     ";
 
     foreach ($inputsSortie as $key => $input) : 
-        $check = ($key!=$type_sortie)? "□": "x";
+        $check = ($key!=$type_sortie)? "□": "☒";
         $page .= "
-            <tr><td>$check</td><td>$input</td></tr>
+            <tr><td style='font-size:24px; width:50px;'>$check</td><td>$input</td></tr>
         ";
     endforeach;
     $page .= "
     </table>";
 
     $page .= "
-    <p>Fait à : </p>
+    <table width=100% border=0 style='font-family:arial;'>
+    <tr>
+    <td><p>Fait à : $city</p>
     <p>Le : $currentDate &nbsp; &nbsp; &nbsp; à: $currentTime </p>
     <p>(Date et heure de début de sortie à mentionner obligatoirement) </p>
-    <p>Signature : </p>
-    <hr>
-    <div style='font-size:10px;'>
-        <p>1 Les personnes souhaitant bénéficier de l'une de ces exceptions doivent se munir s'il y a lieu, lors de leurs déplacements hors de leur domicile, d'un document leur permettant de justifier que le déplacement considéré entre dans le champ de l'une de ces exceptions. </p>
-        <p>2 A utiliser par les travailleurs non-salariés, lorsqu'ils ne peuvent disposer d'un justificatif de déplacement établi par leur employeur. </p>
-        <p>3 Y compris les acquisitions à titre gratuit (distribution de denrées alimentaires...) et les déplacements liés à la perception de prestations sociales et au retrait d'espèces. toto toto01/01/1965paris999 av de foch 75001 paris</p>
+    <p>Signature : </p></td>
+    <td width=100><img src=\"$file\" width=100 ></td>
+    </tr>
+    </table>
+    
+    <div style='font-size:11px;'>
+        <p><sup>1</sup> Les personnes souhaitant bénéficier de l'une de ces exceptions doivent se munir s'il y a lieu, lors de leurs déplacements hors de leur domicile, d'un document leur permettant de justifier que le déplacement considéré entre dans le champ de l'une de ces exceptions. </p>
+        <p><sup>2</sup> A utiliser par les travailleurs non-salariés, lorsqu'ils ne peuvent disposer d'un justificatif de déplacement établi par leur employeur. </p>
+        <p><sup>3</sup> Y compris les acquisitions à titre gratuit (distribution de denrées alimentaires...) et les déplacements liés à la perception de prestations sociales et au retrait d'espèces. toto toto01/01/1965paris999 av de foch 75001 paris</p>
     </div>
-
-    <div style='clear:both;'></div>
+    </div>
+    
 
     ";
 
@@ -145,9 +150,9 @@ function createQRCode(array $fields) {
 
     QRcode::png($qrText, $file); // creates file
     $mpdf = new \Mpdf\Mpdf();
-    $mpdf->WriteHTML( createPage( $fields ) , \Mpdf\HTMLParserMode::HTML_BODY);
+    $mpdf->WriteHTML( createPage( $fields, $file  ) , \Mpdf\HTMLParserMode::HTML_BODY);
     $mpdf->SetTitle('Mon attestation');
-
+    $mpdf->AddPage();
     $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
     $mpdf->Output();
 
