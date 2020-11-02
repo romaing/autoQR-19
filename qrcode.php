@@ -48,7 +48,7 @@ if(isset($_POST['nonce_form'])) {
     $fields['address'] = $_COOKIE['address'];
     $fields['city'] = $_COOKIE['city'];
     $fields['postal_code'] = $_COOKIE['postal_code'];
-    $fields['type_sortie'] = explode(', ',$_COOKIE['type_sortie']);
+    $fields['type_sortie'] = $_COOKIE['type_sortie'];
 
     createQRCode($fields);
 
@@ -86,7 +86,7 @@ function createPage(array $fields, $currentDate, $currentTime, $file ) {
     <p>certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé par le décretn°2020-1310 du 29 octobre 2020 prescrivant les mesures générales nécessaires pour faire face àl'épidémie de Covid19 dans le cadre de l'état d'urgence sanitaire <sup>1</sup> :</p>
     <table style='font-family:arial;'>
     ";
-    
+    $type_sortie = explode(', ', $type_sortie);
     foreach ($inputsSortie as $key => $input) : 
         
         $check = !in_array($key, $type_sortie)? "□": "☒";
@@ -136,8 +136,6 @@ function createQRCode(array $fields) {
     $currentTime = date('G\hi', $decalage );
 
     $file = 'qrcode'.date('-ymd-hi').'.png';
-    $type_sortie = implode(', ', $fields['type_sortie']);
-
 
     $qrText = "Cree le: $currentDate a $currentTime;
     Nom: $lname;
