@@ -89,8 +89,9 @@ function createPage(array $fields, $currentDate, $currentTime, $decalage ,$file 
     <table style='font-family:arial;'>
     ";
 
+    $type_sortie = explode(', ', $type_sortie);
     foreach ($inputsSortie as $key => $input) : 
-        $check = ($key!=$type_sortie)? "□": "☒";
+        $check = ! in_array($key, $type_sortie  ) ? "□": "☒";
         $page .= "
             <tr><td style='font-size:24px; width:50px;'>$check</td><td>$input</td></tr>
         ";
