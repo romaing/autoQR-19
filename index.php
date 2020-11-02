@@ -57,14 +57,14 @@
                         'label' => 'Adresse',
                         'size' => 'col-12'
                     ],
-                    'city' => [
-                        'type' => 'text',
-                        'label' => 'Ville',
-                        'size' => 'col-6'
-                    ],
                     'postal_code' => [
                         'type' => 'text',
                         'label' => 'Code Postal',
+                        'size' => 'col-6'
+                    ],
+                    'city' => [
+                        'type' => 'text',
+                        'label' => 'Ville',
                         'size' => 'col-6'
                     ],
                 ];
