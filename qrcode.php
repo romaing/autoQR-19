@@ -4,6 +4,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor/phpqrcode/qrlib.php';
 
 
+if(empty($_POST['type_sortie'])) {
+    error_log('['. __FILE__ .' L' . __LINE__ . '] : ' . print_r( 'redirect1' , true));
+    header('Location: index.php/?error=sortie');
+    exit();
+}
+
 date_default_timezone_set('Europe/Paris');
 
 if(isset($_POST['nonce_form'])) {
@@ -19,6 +25,7 @@ if(isset($_POST['nonce_form'])) {
     //Format date
     $date = new DateTime($birthdayDate);
     $fields['birthday_date'] = $date->format('d/m/Y');
+    setcookie('birthday_date_unformat', $birthdayDate, time() + 365*24*3600, null, null, false, true);
     setcookie('birthday_date', $fields['birthday_date'], time() + 365*24*3600, null, null, false, true);
 
     $fields['birthday_place'] = htmlspecialchars(stripslashes(trim($_POST['birthday_place'])));
@@ -33,9 +40,11 @@ if(isset($_POST['nonce_form'])) {
     $fields['postal_code'] = htmlspecialchars(stripslashes(trim($_POST['postal_code'])));
     setcookie('postal_code', $fields['postal_code'], time() + 365*24*3600, null, null, false, true); 
 
+    
     $type_sortie = $_POST['type_sortie'];
-    $fields['type_sortie'] = $type_sortie;
-    setcookie('type_sortie', implode(', ', $fields['type_sortie']), time() + 365*24*3600, null, null, false, true); 
+    $fields['type_sortie'] = is_array($type_sortie) ? implode(', ', $type_sortie) : $type_sortie;
+    setcookie('type_sortie', $fields['type_sortie'], time() + 365*24*3600, null, null, false, true); 
+
 
     createQRCode($fields);
     
@@ -140,7 +149,7 @@ function createQRCode(array $fields) {
     $currentTime = date('G\hi', $decalage );
 
     $file = 'qrcode'.date('-ymd-hi').'.png';
-
+    $type_sortie = $type_sortie ?? '';
     $qrText = "Cree le: $currentDate a $currentTime;
     Nom: $lname;
     Prenom: $fname;
@@ -157,8 +166,9 @@ function createQRCode(array $fields) {
     $mpdf->SetTitle('Mon attestation');
     $mpdf->AddPage();
     $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
-    $mpdf->Output();
 
-    
+    $mpdf->Output('mon_attestation.pdf', 'I');
+    unlink ( $file );
+    file_put_contents('$log.txt', $fname. ' ' . $lname[0] .'. a généré une attestation !'.PHP_EOL);
 }
 
