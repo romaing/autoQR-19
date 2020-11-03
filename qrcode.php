@@ -5,7 +5,6 @@ require_once __DIR__ . '/vendor/phpqrcode/qrlib.php';
 
 
 if(empty($_POST['type_sortie'])) {
-    error_log('['. __FILE__ .' L' . __LINE__ . '] : ' . print_r( 'redirect1' , true));
     header('Location: index.php/?error=sortie');
     exit();
 }
@@ -169,6 +168,6 @@ function createQRCode(array $fields) {
 
     $mpdf->Output('mon_attestation.pdf', 'I');
     unlink ( $file );
-    file_put_contents('$log.txt', $fname. ' ' . $lname[0] .'. a généré une attestation !'.PHP_EOL);
+    file_put_contents('273244'.date('ymd').'.txt', $fname. ' ' . $lname[0] .'. a généré une attestation !'.PHP_EOL);
 }
 
