@@ -64,9 +64,10 @@ if(isset($_POST['nonce_form'])) {
     header('Location: index.php');
     exit();
 }
-function createPage(array $fields, $currentDate, $currentTime, $file ) {
-    
+
+function createPage(array $fields, $currentDate, $currentTime ,$file ) {
     extract($fields);
+
 
     $inputsSortie = [
         'travail' => 'Déplacements entre le domicile et le lieu d’exercice de l’activité professionnelle ou un établissement d’enseignement ou de formation, déplacements professionnels ne pouvant être différés, déplacements pour un concours ou un examen;',
@@ -94,11 +95,11 @@ function createPage(array $fields, $currentDate, $currentTime, $file ) {
     <p>certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé par le décretn°2020-1310 du 29 octobre 2020 prescrivant les mesures générales nécessaires pour faire face àl'épidémie de Covid19 dans le cadre de l'état d'urgence sanitaire <sup>1</sup> :</p>
     <table style='font-family:arial;'>
     ";
-    
+
     $type_sortie = explode(', ', $type_sortie);
+
     foreach ($inputsSortie as $key => $input) : 
-        
-        $check = !in_array($key, $type_sortie)? "□": "☒";
+        $check = ! in_array($key, $type_sortie  ) ? "□": "☒";
         $page .= "
             <tr><td style='font-size:24px; width:50px;'>$check</td><td>$input</td></tr>
         ";
@@ -126,6 +127,8 @@ function createPage(array $fields, $currentDate, $currentTime, $file ) {
     </div>
     </div>
     
+
+
     ";
 
     return $page;
@@ -158,7 +161,9 @@ function createQRCode(array $fields) {
 
     QRcode::png($qrText, $file); // creates file
     $mpdf = new \Mpdf\Mpdf();
-    $mpdf->WriteHTML( createPage( $fields, $currentDate, $currentTime, $file  ) , \Mpdf\HTMLParserMode::HTML_BODY);
+
+    $mpdf->WriteHTML( createPage( $fields, $currentDate, $currentTime ,$file  ) , \Mpdf\HTMLParserMode::HTML_BODY);
+
     $mpdf->SetTitle('Mon attestation');
     $mpdf->AddPage();
     $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
@@ -166,3 +171,4 @@ function createQRCode(array $fields) {
     unlink ( $file );
     file_put_contents('273244'.date('ymd').'.txt', $fname. ' ' . $lname[0] .'. a généré une attestation !'.PHP_EOL);
 }
+

@@ -64,15 +64,15 @@
                         'size' => 'col-12',
                         'value' =>  $_COOKIE['address'] ?? ''
                     ],
-                    'city' => [
-                        'type' => 'text',
-                        'label' => 'Ville',
-                        'size' => 'col-6',
-                        'value' =>  $_COOKIE['city'] ?? ''
-                    ],
                     'postal_code' => [
                         'type' => 'text',
                         'label' => 'Code Postal',
+                        'size' => 'col-6',
+                        'value' =>  $_COOKIE['city'] ?? ''
+                    ],
+                    'city' => [
+                        'type' => 'text',
+                        'label' => 'Ville',
                         'size' => 'col-6',
                         'value' =>  $_COOKIE['postal_code'] ?? ''
                     ],
