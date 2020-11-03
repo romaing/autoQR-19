@@ -25,7 +25,7 @@
         <h1>Auto QRCode Covid-19 😷</h1>
         <p>En ces temps de confinement dù au Covid-19, <strong>autoQR-19</strong> est un outil vous permettant, à chaque actualisation de la page, de regénérer automatiquement votre QR Code d'attestation de sortie,et ainsi rafraichir l'heure de sortie. Le QR Code généré sera bien sûr <strong>identique</strong> à ceux générés par le site du gouvernement.</p>
         <p>Entrez vos information dans les champs ci-dessous pour générer votre QR Code. Pour le régénerer avec l'heure de sortie à l'heure actuelle, actualisez seulement le PDF.</p>
-        <form action="\autoQR-19\qrcode.php" method="post">
+        <form action="/qrcode.php" method="post">
             <div class="form-row">
 
                 <?php
