@@ -4,6 +4,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor/phpqrcode/qrlib.php';
 
 
+if(empty($_POST['type_sortie'])) {
+    error_log('['. __FILE__ .' L' . __LINE__ . '] : ' . print_r( 'redirect1' , true));
+    header('Location: index.php/?error=sortie');
+    exit();
+}
+
 date_default_timezone_set('Europe/Paris');
 
 if(isset($_POST['nonce_form'])) {
@@ -19,6 +25,7 @@ if(isset($_POST['nonce_form'])) {
     //Format date
     $date = new DateTime($birthdayDate);
     $fields['birthday_date'] = $date->format('d/m/Y');
+    setcookie('birthday_date_unformat', $birthdayDate, time() + 365*24*3600, null, null, false, true);
     setcookie('birthday_date', $fields['birthday_date'], time() + 365*24*3600, null, null, false, true);
 
     $fields['birthday_place'] = htmlspecialchars(stripslashes(trim($_POST['birthday_place'])));
@@ -33,9 +40,11 @@ if(isset($_POST['nonce_form'])) {
     $fields['postal_code'] = htmlspecialchars(stripslashes(trim($_POST['postal_code'])));
     setcookie('postal_code', $fields['postal_code'], time() + 365*24*3600, null, null, false, true); 
 
+    
     $type_sortie = $_POST['type_sortie'];
-    $fields['type_sortie'] = $type_sortie;
-    setcookie('type_sortie', implode(', ', $fields['type_sortie']), time() + 365*24*3600, null, null, false, true); 
+    $fields['type_sortie'] = is_array($type_sortie) ? implode(', ', $type_sortie) : $type_sortie;
+    setcookie('type_sortie', $fields['type_sortie'], time() + 365*24*3600, null, null, false, true); 
+
 
     createQRCode($fields);
     
@@ -86,6 +95,7 @@ function createPage(array $fields, $currentDate, $currentTime, $file ) {
     <p>certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé par le décretn°2020-1310 du 29 octobre 2020 prescrivant les mesures générales nécessaires pour faire face àl'épidémie de Covid19 dans le cadre de l'état d'urgence sanitaire <sup>1</sup> :</p>
     <table style='font-family:arial;'>
     ";
+    
     $type_sortie = explode(', ', $type_sortie);
     foreach ($inputsSortie as $key => $input) : 
         
@@ -94,6 +104,8 @@ function createPage(array $fields, $currentDate, $currentTime, $file ) {
             <tr><td style='font-size:24px; width:50px;'>$check</td><td>$input</td></tr>
         ";
     endforeach;
+
+    
     $page .= "
     </table>";
 
@@ -136,7 +148,7 @@ function createQRCode(array $fields) {
     $currentTime = date('G\hi', $decalage );
 
     $file = 'qrcode'.date('-ymd-hi').'.png';
-
+    $type_sortie = $type_sortie ?? '';
     $qrText = "Cree le: $currentDate a $currentTime;
     Nom: $lname;
     Prenom: $fname;
@@ -152,6 +164,7 @@ function createQRCode(array $fields) {
     $mpdf->AddPage();
     $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
     $mpdf->Output();
-
+    error_log('['. __FILE__ .' L' . __LINE__ . '] : ' . print_r( $file , true));
+    // unlink ( string $filename [, resource $context ] );
     
 }

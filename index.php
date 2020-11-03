@@ -25,59 +25,69 @@
         <h1>Auto QRCode Covid-19 😷</h1>
         <p>En ces temps de confinement dù au Covid-19, <strong>autoQR-19</strong> est un outil vous permettant, à chaque actualisation de la page, de regénérer automatiquement votre QR Code d'attestation de sortie,et ainsi rafraichir l'heure de sortie. Le QR Code généré sera bien sûr <strong>identique</strong> à ceux générés par le site du gouvernement.</p>
         <p>Entrez vos information dans les champs ci-dessous pour générer votre QR Code. Pour le régénerer avec l'heure de sortie à l'heure actuelle, actualisez seulement le PDF.</p>
-        <form action="qrcode.php" method="post">
+        <form action="\autoQR-19\qrcode.php" method="post">
             <div class="form-row">
 
                 <?php
 
+                extract($_COOKIE);
+                
                 $inputsFields = [
                     'lname' => [
                         'type' => 'text',
                         'label' => 'Votre nom',
-                        'size' => 'col-6'
+                        'size' => 'col-6',
+                        'value' =>  $lname ?? ''
                     ],
                     'fname' => [
                         'type' => 'text',
                         'label' => 'Votre prénom',
-                        'size' => 'col-6'
+                        'size' => 'col-6',
+                        'value' =>  $fname ?? ''
                     ],
                     'birthday_date' => [
-                        'type' => 'text',
+                        'type' => isset($birthday_date_unformat) ? 'date' :'text',
                         'label' => 'Date de naissance',
                         'size' => 'col-6',
-                        'args' => 'onfocus="(this.type=\'date\')" onblur="(this.type=\'text\')"'
+                        'value' =>  $birthday_date_unformat ?? '',
+                        'args' => isset($birthday_date_unformat) ? '' : 'onfocus="(this.type=\'date\')""'
                     ],
                     'birthday_place' => [
                         'type' => 'text',
                         'label' => 'Lieu de naissance',
-                        'size' => 'col-6'
+                        'size' => 'col-6',
+                        'value' =>  $birthday_place ?? ''
                     ],
                     'address' => [
                         'type' => 'text',
                         'label' => 'Adresse',
-                        'size' => 'col-12'
+                        'size' => 'col-12',
+                        'value' =>  $address ?? ''
                     ],
                     'city' => [
                         'type' => 'text',
                         'label' => 'Ville',
-                        'size' => 'col-6'
+                        'size' => 'col-6',
+                        'value' =>  $city ?? ''
                     ],
                     'postal_code' => [
                         'type' => 'text',
                         'label' => 'Code Postal',
-                        'size' => 'col-6'
+                        'size' => 'col-6',
+                        'value' =>  $postal_code ?? ''
                     ],
                 ];
 
                 foreach ($inputsFields as $key => $input) : ?>
                     <div class="form-group <?= $input['size'] ?>">
-                        <input class="form-control form-control-lg <?= isset($input['class']) ? $input['class'] : '' ?>" name="<?= $key ?>" id="<?= $key ?>" placeholder="<?= $input['label'] ?>" <?= isset($input['args']) ? $input['args'] : '' ?>">
+                        <input type="<?= $input['type'] ?>" class="form-control form-control-lg <?= $input['class'] ?? '' ?>" value="<?= $input['value'] ?? '' ?>" name="<?= $key ?>" id="<?= $key ?>" placeholder="<?= $input['label'] ?>" <?= $input['args'] ?? '' ?>">
                     </div>
                 <?php endforeach; ?>
                 <input type="hidden" name="nonce_form">
                 <!--------- TYPE SORTIE ------->
 
-                <div class="form-group">
+                <div class="form-group checkbox-group required">
+                    <p style="font-size:18px; <?php if(isset($_GET['error']) && $_GET['error'] === 'sortie') {echo 'color:red;';} ?>"><em>Renseigner au moins un type de sortie *</em></p>
                     <?php
                     $inputsSortie = [
                         'travail' => 'Déplacements entre le domicile et le lieu d’exercice de l’activité professionnelle ou un établissement d’enseignement ou de formation, déplacements professionnels ne pouvant être différés, déplacements pour un concours ou un examen;',
@@ -93,17 +103,31 @@
 
                     foreach ($inputsSortie as $key => $input) : ?>
                         <div class="d-flex">
-                            <input class="d-block w-10" type="checkbox" id="<?= $key ?>" name="type_sortie[]" value="<?= $key ?>">
+                            <input class="d-block w-10 type-sortie-input" type="checkbox" id="<?= $key ?>" name="type_sortie[]" value="<?= $key ?>">
                             <label class="d-block w-90" for="<?= $key ?>"><?= $input ?></label>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
-            <button type="submit" class="w-100 mb-3 form-submit btn btn-primary">Envoyer</button>
+            <button type="submit" id="submit" class="w-100 mb-3 form-submit btn btn-primary">Envoyer</button>
 
         </form>
         <p><br><em>Ce site à recourt à l'utilisation de cookies utiles à ce que vous n'ayez pas à retaper sans cesse vos informations !</em></p>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script>
+        // $('#submit').prop("disabled", true);
+
+        // $('.type-sortie-input').change(function() {
+        //     $('div.checkbox-group.required :checkbox:checked').length > 0 ? $('#submit').prop("disabled", false) : $('#submit').prop("disabled", true);
+        // });
+
+        // $('#submit').click(function() {
+        //     if($('#submit').disabled) {
+        //         console.log('disabled')
+        //     }
+        // });
+    </script>
 </body>
 
 </html>
