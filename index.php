@@ -37,44 +37,44 @@
                         'type' => 'text',
                         'label' => 'Votre nom',
                         'size' => 'col-6',
-                        'value' =>  $lname ?? ''
+                        'value' =>  $_COOKIE['lname'] ?? ''
                     ],
                     'fname' => [
                         'type' => 'text',
                         'label' => 'Votre prénom',
                         'size' => 'col-6',
-                        'value' =>  $fname ?? ''
+                        'value' =>  $_COOKIE['fname'] ?? ''
                     ],
                     'birthday_date' => [
-                        'type' => isset($birthday_date_unformat) ? 'date' :'text',
+                        'type' => isset($_COOKIE['birthday_date']) ? 'date' :'text',
                         'label' => 'Date de naissance',
                         'size' => 'col-6',
-                        'value' =>  $birthday_date_unformat ?? '',
-                        'args' => isset($birthday_date_unformat) ? '' : 'onfocus="(this.type=\'date\')""'
+                        'value' =>  $_COOKIE['birthday_date'] ?? '',
+                        'args' => isset($_COOKIE['birthday_date']) ? '' : 'onfocus="(this.type=\'date\')""'
                     ],
                     'birthday_place' => [
                         'type' => 'text',
                         'label' => 'Lieu de naissance',
                         'size' => 'col-6',
-                        'value' =>  $birthday_place ?? ''
+                        'value' =>  $_COOKIE['birthday_place'] ?? ''
                     ],
                     'address' => [
                         'type' => 'text',
                         'label' => 'Adresse',
                         'size' => 'col-12',
-                        'value' =>  $address ?? ''
+                        'value' =>  $_COOKIE['address'] ?? ''
                     ],
                     'city' => [
                         'type' => 'text',
                         'label' => 'Ville',
                         'size' => 'col-6',
-                        'value' =>  $city ?? ''
+                        'value' =>  $_COOKIE['city'] ?? ''
                     ],
                     'postal_code' => [
                         'type' => 'text',
                         'label' => 'Code Postal',
                         'size' => 'col-6',
-                        'value' =>  $postal_code ?? ''
+                        'value' =>  $_COOKIE['postal_code'] ?? ''
                     ],
                 ];
 
@@ -100,7 +100,7 @@
                         'missions' => 'Participation à des missions d\'intérêt général sur demande de l\'autorité administrative ;',
                         'enfants' => 'Déplacement pour chercher les enfants à l’école et à l’occasion de leurs activités périscolaires ;'
                     ];
-
+                    
                     foreach ($inputsSortie as $key => $input) : ?>
                         <div class="d-flex">
                             <input class="d-block w-10 type-sortie-input" type="checkbox" id="<?= $key ?>" name="type_sortie[]" value="<?= $key ?>">
