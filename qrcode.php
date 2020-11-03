@@ -164,7 +164,6 @@ function createQRCode(array $fields) {
     $mpdf->AddPage();
     $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
     $mpdf->Output();
-    error_log('['. __FILE__ .' L' . __LINE__ . '] : ' . print_r( $file , true));
-    // unlink ( string $filename [, resource $context ] );
+    unlink ( $file );
     
 }
