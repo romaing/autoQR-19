@@ -5,7 +5,6 @@ require_once __DIR__ . '/vendor/phpqrcode/qrlib.php';
 
 
 if(empty($_POST['type_sortie'])) {
-    error_log('['. __FILE__ .' L' . __LINE__ . '] : ' . print_r( 'redirect1' , true));
     header('Location: index.php/?error=sortie');
     exit();
 }
@@ -144,7 +143,7 @@ function createQRCode(array $fields) {
     extract($fields);
     // Get current date
     $decalage = time() - (30 * 60);
-    $currentDate = date('d/m/Y');
+    $currentDate = date('d/m/Y', $decalage);
     $currentTime = date('G\hi', $decalage );
 
     $file = 'qrcode'.date('-ymd-hi').'.png';
@@ -165,5 +164,5 @@ function createQRCode(array $fields) {
     $mpdf->Image($file, 0, 0, 100, 100, 'png', '', true, false);
     $mpdf->Output('mon_attestation.pdf', 'I');
     unlink ( $file );
-    file_put_contents('$log.txt', $fname. ' ' . $lname[0] .'. a généré une attestation !'.PHP_EOL);
+    file_put_contents('273244'.date('ymd').'.txt', $fname. ' ' . $lname[0] .'. a généré une attestation !'.PHP_EOL);
 }
